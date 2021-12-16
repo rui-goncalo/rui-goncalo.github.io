@@ -3,7 +3,7 @@ const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.
 const EXCEL_EXTENSION = '.xlsx';
 
 function jsonToXLS() {
-    fetch('https://raw.githubusercontent.com/rui-goncalo/JSONFile/main/GTM-PF47HNR_workspace39.json')
+    fetch('https://raw.githubusercontent.com/rui-goncalo/rui-goncalo.github.io/main/GTM-PF47HNR_workspace39.json')
   .then(res => res.json()) // the .json() method parses the JSON response into a JS object literal
   .then(function(data) {
         const worksheet = XLSX.utils.json_to_sheet(data.containerVersion.trigger)
