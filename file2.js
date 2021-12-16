@@ -6,7 +6,7 @@ function jsonToXLS() {
     fetch('https://raw.githubusercontent.com/rui-goncalo/rui-goncalo.github.io/main/GTM-PF47HNR_workspace39.json')
   .then(res => res.json()) // the .json() method parses the JSON response into a JS object literal
   .then(function(data) {
-        const worksheet = XLSX.utils.json_to_sheet(data.containerVersion.trigger)
+        const worksheet = XLSX.utils.json_to_sheet(data.containerVersion.tag)
         const workbook = {
             Sheets:{
                 'data':worksheet
