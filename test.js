@@ -1,4 +1,4 @@
 document.referrer = "123.xom"
 
 
-console.log(document.referrer)
+console.log("referrer: " + document.referrer)
