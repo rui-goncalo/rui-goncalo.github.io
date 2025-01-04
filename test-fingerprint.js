@@ -1,8 +1,9 @@
-// Initialize the agent at application startup.
-  // If you're using an ad blocker or Brave/Firefox, this import will not work.
-  // Please use the NPM package instead: https://t.ly/ORyXk
-  const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4')
-    .then(FingerprintJS => FingerprintJS.load())
+// Load the FingerprintJS library dynamically
+const script = document.createElement('script');
+script.src = 'https://openfpcdn.io/fingerprintjs/v4';
+script.async = true; // Load asynchronously to avoid blocking page rendering
+
+document.head.appendChild(script);
 
 (function(){
   
@@ -125,14 +126,18 @@ function dec2hex (dec) {
 }*/
 
 function ip(){
-  return fpPromise
+  FingerprintJS.load()
     .then(fp => fp.get())
     .then(result => {
-      // This is the visitor identifier:
-      const visitorId = result.visitorId
-      return Encrypt(visitorId)
-      // Usamos Encrypt?!?!?!
+      const visitorId = result.visitorId;
+      console.log('Visitor ID:', visitorId);
+
+      return Encrypt(visitorId); // Encrypt?????
+
     })
+    .catch(error => {
+      console.error('Error getting visitor ID:', error);
+    });
 }
 
 function generateId (len) {
@@ -158,7 +163,3 @@ function Encrypt(value)
   }
   return result;
 }
-
-
-
-console.log(ip())
