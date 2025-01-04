@@ -53,64 +53,77 @@ document.head.appendChild(script);
   },aj();
 }());
 function send(l,c,u1,d,h1){
-	
-	let response =  fetch(u1,{
-    method: "POST",
-    headers: j(),
-    body:JSON.stringify({"l":l,"orginId":c,"input":d,"r":document.referrer,"ip":ip()})
-  }).then((response) => {
-	  
-    return response.json();
-  })
-  .then((data) => {
+
+  async function getVisitorId() {
+    try {
+    const fp = await FingerprintJS.load();
+    const result = await fp.get();
+    console.log("visitorId",result.visitorId);
+    return result.visitorId;
+    } catch (error) {
+    console.error('Error getting visitor ID:', error);
+    return null;
+    }
+  }
+
+    (async () => {
+      const visitorId = await getVisitorId();
+  
+      let response =  fetch(u1,{
+        method: "POST",
+        headers: j(),
+        body:JSON.stringify({"l":l,"orginId":c,"input":d,"r":document.referrer,"ip":visitorId})
+      }).then((response) => { response.json()})
+      .then((data) => {
 	 
-  if(data.data)
-    data.data.forEach((ele)=>{
-      
-			var newKeyList = ele.key.split(",");
-      			
-			newKeyList.forEach((new_key)=>{
-				ele.key = new_key
-				var myEle = document.getElementById(ele.key);
-		
-				if(myEle != null) { 
-					document.getElementById(ele.key).value = ele.value; 
-				}else{
-					
-					if(document.getElementsByName(ele.key)[0] && document.getElementsByName(ele.key)[0].name){
-						document.getElementsByName(ele.key)[0].value =  ele.value;
-					}
-					
-				}
-				var els = document.getElementsByName(ele.key);
-				Array.prototype.forEach.call(els, function(el) {
-					
-					el.setAttribute('value',ele.value);
-				});
-				
-				///////////
-				var newKey = ele.key.toUpperCase();
-				//console.log("kkkkkkkkk",newKey)
-				var myEle1 = document.getElementById(newKey);
-				
-				if(myEle1 != null) { 
-					document.getElementById(newKey).value = ele.value; 
-				}else{
-					
-					if(document.getElementsByName(newKey)[0] && document.getElementsByName(newKey)[0].name){
-						document.getElementsByName(newKey)[0].value =  ele.value;
-					}
-					
-					
-				}
-				var els = document.getElementsByName(newKey);
-				Array.prototype.forEach.call(els, function(el) {
-					
-					el.setAttribute('value',ele.value);
-				});
-				
-			})
-	})
+        if(data.data)
+          data.data.forEach((ele)=>{
+            
+            var newKeyList = ele.key.split(",");
+                  
+            newKeyList.forEach((new_key)=>{
+              ele.key = new_key
+              var myEle = document.getElementById(ele.key);
+          
+              if(myEle != null) { 
+                document.getElementById(ele.key).value = ele.value; 
+              }else{
+                
+                if(document.getElementsByName(ele.key)[0] && document.getElementsByName(ele.key)[0].name){
+                  document.getElementsByName(ele.key)[0].value =  ele.value;
+                }
+                
+              }
+              var els = document.getElementsByName(ele.key);
+              Array.prototype.forEach.call(els, function(el) {
+                
+                el.setAttribute('value',ele.value);
+              });
+              
+              ///////////
+              var newKey = ele.key.toUpperCase();
+              //console.log("kkkkkkkkk",newKey)
+              var myEle1 = document.getElementById(newKey);
+              
+              if(myEle1 != null) { 
+                document.getElementById(newKey).value = ele.value; 
+              }else{
+                
+                if(document.getElementsByName(newKey)[0] && document.getElementsByName(newKey)[0].name){
+                  document.getElementsByName(newKey)[0].value =  ele.value;
+                }
+                
+                
+              }
+              var els = document.getElementsByName(newKey);
+              Array.prototype.forEach.call(els, function(el) {
+                
+                el.setAttribute('value',ele.value);
+              });
+              
+            })
+        })
+    })();
   });;
   
 }
