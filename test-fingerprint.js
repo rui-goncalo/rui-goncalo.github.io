@@ -84,11 +84,13 @@
 
   async function getFingerprint() {
     try {
-      // Carrega a biblioteca FingerprintJS v3 corretamente
-      const FingerprintJS = await import("https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js");
+      // Carrega a biblioteca FingerprintJS
+      const { default: FingerprintJS } = await import(
+        "https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"
+      );
 
       // Inicializa o FingerprintJS
-      const fp = await FingerprintJS.default.load();
+      const fp = await FingerprintJS.load();
       const result = await fp.get();
 
       return result.visitorId; // Retorna o ID do visitante
