@@ -1,9 +1,33 @@
-// Load the FingerprintJS library dynamically
-const script = document.createElement('script');
-script.src = 'https://openfpcdn.io/fingerprintjs/v4';
-script.async = true; // Load asynchronously to avoid blocking page rendering
+const loadFingerprintJS = async () => {
+  if (window.FingerprintJS) {
+    return window.FingerprintJS;
+  }
+  
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = 'https://openfpcdn.io/fingerprintjs/v4';
+    script.async = true;
+    
+    script.onload = () => resolve(window.FingerprintJS);
+    script.onerror = (error) => reject(new Error('Failed to load FingerprintJS'));
+    
+    document.head.appendChild(script);
+  });
 
-document.head.appendChild(script);
+};
+
+async function getVisitorId() {
+  try {
+    const FingerprintJS = await loadFingerprintJS();
+    const fp = await FingerprintJS.load();
+    const result = await fp.get();
+    console.log("visitorId",result.visitorId);
+    return result.visitorId;
+  } catch (error) {
+    console.error('Error getting visitor ID:', error);
+    return null;
+  }
+}
 
 (function(){
   
@@ -54,17 +78,7 @@ document.head.appendChild(script);
 }());
 function send(l,c,u1,d,h1){
 
-  async function getVisitorId() {
-    try {
-    const fp = await FingerprintJS.load();
-    const result = await fp.get();
-    console.log("visitorId",result.visitorId);
-    return result.visitorId;
-    } catch (error) {
-    console.error('Error getting visitor ID:', error);
-    return null;
-    }
-  }
+  
 
     (async () => {
       const visitorId = await getVisitorId();
