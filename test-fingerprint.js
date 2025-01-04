@@ -158,3 +158,7 @@ function Encrypt(value)
   }
   return result;
 }
+
+
+
+console.log(ip())
