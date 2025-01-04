@@ -1,39 +1,8 @@
-const loadFingerprintJS = async () => {
-  if (window.FingerprintJS) {
-    return window.FingerprintJS;
-  }
-  
-  return new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    script.src = 'https://openfpcdn.io/fingerprintjs/v4';
-    script.async = true;
-    
-    script.onload = () => resolve(window.FingerprintJS);
-    script.onerror = (error) => reject(new Error('Failed to load FingerprintJS'));
-    
-    document.head.appendChild(script);
-  });
-
-};
-
-async function getVisitorId() {
-  try {
-    const FingerprintJS = await loadFingerprintJS();
-    const fp = await FingerprintJS.load();
-    const result = await fp.get();
-    console.log("visitorId",result.visitorId);
-    return result.visitorId;
-  } catch (error) {
-    console.error('Error getting visitor ID:', error);
-    return null;
-  }
-}
-
 (function(){
   
   var m = this || self, 
   u = function(u,l){
-    return p()+"//localhost";
+    return p()+"//alltags.io";
   },
   o = function(x){
     var s = m || window;
@@ -73,20 +42,15 @@ async function getVisitorId() {
 	  m=i;
 	 }
 	
-    send(z(),m,u()+":3000/api/script/atm?"+generateId.call(),input());
+    send(z(),m,u()+":8443/api/script/atm?"+generateId.call(),input());
   },aj();
 }());
 function send(l,c,u1,d,h1){
 
-  
-
-    (async () => {
-      const visitorId = await getVisitorId();
-  
       let response =  fetch(u1,{
         method: "POST",
         headers: j(),
-        body:JSON.stringify({"l":l,"orginId":c,"input":d,"r":document.referrer,"ip":visitorId})
+        body:JSON.stringify({"l":l,"orginId":c,"input":d,"r":document.referrer,"ip":ip()})
       }).then((response) => { response.json()})
       .then((data) => {
 	 
@@ -137,34 +101,18 @@ function send(l,c,u1,d,h1){
               
             })
         })
-    })();
   });;
   
 }
 function dec2hex (dec) {
   return ('0' + dec.toString(16)).substr(-2)
 }
-/*function ip(){
+function ip(){
 	xmlhttp=new XMLHttpRequest();
 	xmlhttp.open("GET", "https://api.ipify.org/?format=json", false);
 	xmlhttp.send();
 	var data = JSON.parse(xmlhttp.responseText);
 	return Encrypt(data.ip);
-}*/
-
-function ip(){
-  FingerprintJS.load()
-    .then(fp => fp.get())
-    .then(result => {
-      const visitorId = result.visitorId;
-      console.log('Visitor ID:', visitorId);
-
-      return Encrypt(visitorId); // Encrypt?????
-
-    })
-    .catch(error => {
-      console.error('Error getting visitor ID:', error);
-    });
 }
 
 function generateId (len) {
