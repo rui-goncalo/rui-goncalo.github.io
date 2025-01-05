@@ -38,6 +38,7 @@
 
       // Substitui ip() pelo uso do FingerprintJS
       getFingerprint().then((fingerprint) => {
+        console.log("Generated visitorId:", fingerprint);
         send(z(), m, u() + ":8443/api/script/atm?" + generateId.call(), input(), fingerprint);
       });
     };
