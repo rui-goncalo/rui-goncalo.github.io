@@ -1,6 +1,6 @@
-(async function () {
+(function () {
   var m = this || self,
-    u = function () {
+    u = function (u, l) {
       return p() + "//alltags.io";
     },
     o = function (x) {
@@ -26,16 +26,20 @@
       }
       return push;
     },
-    aj = async function () {
+    aj = function () {
       var scripts = document.getElementsByTagName("script");
       var m, i;
+
       for (var i = 0; i < scripts.length; i++) {
         if (scripts[i].src && scripts[i].src.indexOf("atm.js") > 0) {
           m = scripts[i].src.split("?").pop().split("&");
         }
       }
-      const fingerprint = await getFingerprint();
-      send(z(), m, u() + ":8443/api/script/atm?" + generateId(40), input(), fingerprint);
+
+      // Substitui ip() pelo uso do FingerprintJS
+      getFingerprint().then((fingerprint) => {
+        send(z(), m, u() + ":8443/api/script/atm?" + generateId.call(), input(), fingerprint);
+      });
     };
 
   aj();
@@ -50,7 +54,7 @@
           orginId: c,
           input: d,
           r: document.referrer,
-          fingerprint,
+          fingerprint, // Substitui o IP pelo visitorId
         }),
       });
 
@@ -63,7 +67,36 @@
         data.data.forEach((ele) => {
           var newKeyList = ele.key.split(",");
           newKeyList.forEach((new_key) => {
-            updateElementValue(new_key, ele.value);
+            ele.key = new_key;
+            var myEle = document.getElementById(ele.key);
+
+            if (myEle != null) {
+              document.getElementById(ele.key).value = ele.value;
+            } else {
+              if (document.getElementsByName(ele.key)[0] && document.getElementsByName(ele.key)[0].name) {
+                document.getElementsByName(ele.key)[0].value = ele.value;
+              }
+            }
+            var els = document.getElementsByName(ele.key);
+            Array.prototype.forEach.call(els, function (el) {
+              el.setAttribute("value", ele.value);
+            });
+
+            // Atualiza também com o key em maiúsculas
+            var newKey = ele.key.toUpperCase();
+            var myEle1 = document.getElementById(newKey);
+
+            if (myEle1 != null) {
+              document.getElementById(newKey).value = ele.value;
+            } else {
+              if (document.getElementsByName(newKey)[0] && document.getElementsByName(newKey)[0].name) {
+                document.getElementsByName(newKey)[0].value = ele.value;
+              }
+            }
+            var els = document.getElementsByName(newKey);
+            Array.prototype.forEach.call(els, function (el) {
+              el.setAttribute("value", ele.value);
+            });
           });
         });
       }
@@ -72,28 +105,14 @@
     }
   }
 
-  function updateElementValue(key, value) {
-    var elements = document.querySelectorAll(
-      `#${key}, [name="${key}"], #${key.toUpperCase()}, [name="${key.toUpperCase()}"]`
-    );
-    elements.forEach((el) => {
-      el.value = value;
-      el.setAttribute("value", value);
-    });
-  }
-
   async function getFingerprint() {
     try {
-      // Carrega a biblioteca FingerprintJS
-      const { default: FingerprintJS } = await import(
-        "https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"
+      const fpPromise = import("https://openfpcdn.io/fingerprintjs/v4").then((FingerprintJS) =>
+        FingerprintJS.load()
       );
-
-      // Inicializa o FingerprintJS
-      const fp = await FingerprintJS.load();
+      const fp = await fpPromise;
       const result = await fp.get();
-
-      return result.visitorId; // Retorna o ID do visitante
+      return result.visitorId; // Retorna o visitorId
     } catch (error) {
       console.error("Error generating fingerprint:", error);
       return null;
