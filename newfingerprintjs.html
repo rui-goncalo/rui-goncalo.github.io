@@ -5,51 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fingerprint Test</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/clientjs/0.1.11/client.min.js"></script>
-
 </head>
 <body>
     <h1>FingerprintJS Test with ClientJS</h1>
     <p>Abre o Console (F12 > Console) para ver o resultado.</p>
 
     <script>
-        async function getFingerprint() {
+        function getFingerprint() {
             try {
-                // Carregar dinamicamente o ClientJS
-                const script = document.createElement('script');
-                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/clientjs/0.1.11/client.min.js';
-                script.async = true;
+                const client = new ClientJS();
+                const fingerprint = client.getFingerprint();
 
-                return new Promise((resolve, reject) => {
-                    script.onload = () => {
-                        try {
-                            const client = new ClientJS();
-                            const fingerprint = client.getFingerprint();
-
-                            console.log("Fingerprint:", fingerprint);
-                            resolve(fingerprint);
-                        } catch (error) {
-                            console.error("Erro ao gerar fingerprint:", error);
-                            reject(null);
-                        }
-                    };
-
-                    script.onerror = () => {
-                        console.error("Falha ao carregar ClientJS");
-                        reject(null);
-                    };
-
-                    document.head.appendChild(script);
-                });
+                console.log("Fingerprint:", fingerprint);
             } catch (error) {
-                console.error("Erro inesperado:", error);
-                return null;
+                console.error("Erro ao gerar fingerprint:", error);
             }
         }
 
         // Chamar a função para gerar o fingerprint
-        getFingerprint().then(fp => {
-            console.log("Fingerprint gerado:", fp);
-        });
+        getFingerprint();
     </script>
 </body>
 </html>
