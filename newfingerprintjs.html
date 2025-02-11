@@ -4,14 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fingerprint Test</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/clientjs/0.1.11/client.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clientjs/0.1.11/client.min.js" defer></script>
 </head>
 <body>
-    <h1>FingerprintJS Test with ClientJS</h1>
-    <p>Abre o Console (F12 > Console) para ver o resultado.</p>
+    <h1>Alltags | FingerprintJS Test, yo</h1>
 
     <script>
-        function getFingerprint() {
+        document.addEventListener("DOMContentLoaded", () => {
             try {
                 const client = new ClientJS();
                 const fingerprint = client.getFingerprint();
@@ -20,10 +19,7 @@
             } catch (error) {
                 console.error("Erro ao gerar fingerprint:", error);
             }
-        }
-
-        // Chamar a função para gerar o fingerprint
-        getFingerprint();
+        });
     </script>
 </body>
 </html>
