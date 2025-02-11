@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FingerprintJS Test</title>
-    <script src="https://openfpcdn.io/fingerprintjs/v4"></script>
+    <script async src="https://openfpcdn.io/fingerprintjs/v4"></script>
 </head>
 <body>
     <h1>FingerprintJS Test</h1>
@@ -13,9 +13,12 @@
     <script>
         async function getFingerprint() {
             try {
+                // Garante que FingerprintJS está carregado antes de o usar
+                const FingerprintJS = await import('https://openfpcdn.io/fingerprintjs/v4')
+                    .then(module => module.default);
+
                 // Carregar FingerprintJS
-                const fpPromise = FingerprintJS.load();
-                const fp = await fpPromise;
+                const fp = await FingerprintJS.load();
                 const result = await fp.get();
 
                 console.log("Fingerprint:", result.visitorId);
