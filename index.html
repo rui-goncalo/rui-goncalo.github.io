@@ -4,17 +4,23 @@
   <title>Alltags website test - A1</title>
   <!-- <script src="test-fingerprint.js"></script> -->
   <script src="https://www.alltags.io/atm/atm.js?id=ATM-6738C4C2E4701075C8771577"></script>
+  
+  <!-- AllTags -->
   <script>
-    (function(z,d,s,l,i,subdomain){
-    z[l]=z[l]||[];z[l].push({"atm.start":new Date().getTime(),event:"atm.js"});
-    var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),
-     dl=l!="dataLayer"?"&l="+l:"";
-    j.async=true;
-    j.src="https://alltags-test.net/atm/atm.js?id="+i+"&subdomain="+encodeURIComponent("https://alltags-test.net")+dl;
-    f.parentNode.insertBefore(j,f);
-    })
-    (window,document,"script","dataLayer","ATM-677EC195CD7E7195AEAAC862");
+  (function(z,d,s,l,i){
+  var atId = ATM-6767F9EF87D7D60842949130
+  var atHostname = undefined
+  z[l]=z[l]||[];z[l].push({"atm.start":new Date().getTime(),event:"atm.js"});
+  var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),
+   dl=l!="dataLayer"?"&l="+l:"";
+  j.async=true;
+  j.src= atHostname + "/atm/atm.js?id="+i+"&subdomain="+encodeURIComponent(atHostname)+dl;
+  f.parentNode.insertBefore(j,f);
+  })
+  (window,document,"script","dataLayer",atId);</script>
+  <!-- AllTags -->
+
   </script>
 </head>
 <body>
